@@ -218,12 +218,8 @@
         // EXAMPLE: just grab the first barcode
         break;
     
-    // 将获得到条形码显示到我们的界面上
-    _price.text = symbol.data;
-    
-    // 扫描时的图片显示到我们的界面上
-    //_resultImage.image =
-    //[info objectForKey: UIImagePickerControllerOriginalImage];
+    //把数据传给网络函数
+    [self getJson:symbol.data];
     
     // 扫描界面退出
     [reader dismissModalViewControllerAnimated: YES];
@@ -231,9 +227,12 @@
 
 - (void)getJson:(NSString *)str {
     
-   // NSString *str = @"https://api.douban.com/v2/book/isbn/9787544253994";
+    NSString *newStr = @"https://api.douban.com/v2/book/isbn/";
+    newStr = [newStr stringByAppendingString:str];
     
-    NSURL *url = [NSURL URLWithString:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSLog(@"%@",newStr);
+    
+    NSURL *url = [NSURL URLWithString:[newStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     
@@ -279,7 +278,6 @@
                    config: ZBAR_CFG_ENABLE
                        to: 0];
     
-    [self getJson:@"https://api.douban.com/v2/book/isbn/9787544253994"];
     [self presentModalViewController: reader animated: YES];
 }
 
