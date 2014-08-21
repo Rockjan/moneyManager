@@ -51,8 +51,9 @@
     [_amount addTarget:self action:@selector(onEditingAmount) forControlEvents:UIControlEventEditingChanged];
 }
 - (void)initDB {
-    NSString *sql = @"CREATE TABLE IF NOT EXISTS detailTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, counts INTEGER, type INTEGER, year TEXT, month TEXT, day TEXT)";
     
+    NSString *sql = @"CREATE TABLE IF NOT EXISTS detailTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, counts INTEGER, type INTEGER, year TEXT, month TEXT, day TEXT)";
+
     sqlDB *myDB = [sqlDB sharedInstance];
     [myDB openDB];
     [myDB createDBWithString:sql];

@@ -41,7 +41,35 @@
         
         NSLog(@"数据库打开失败！");
         return NO;
+        
     }
+    
+    NSString *sql = @"CREATE TABLE IF NOT EXISTS personInfo (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)";
+    char *error;
+    if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
+        NSLog(@"新建type-table失败！");
+    }
+    
+    NSString *sqlt = @"CREATE TABLE IF NOT EXISTS typeTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, tid INTEGER)";
+    
+    [self createDBWithString:sqlt];
+    
+    NSDictionary *dict = @{@"0":@"餐饮",@"1":@"书籍",@"2":@"房租",@"3":@"话费",@"4":@"网购",@"5":@"服饰",@"6":@"交通",@"7":@"其他"};
+
+    for (NSString *key in dict) {
+        sql = [NSString stringWithFormat:@"INSERT INTO typeTable (type,tid) VALUES('%@',%d)"
+               ,[dict valueForKey:key]
+               ,[key intValue]];
+        
+        char *error;
+        
+        if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
+            NSLog(@"数据库插入失败！");
+            return NO;
+        }
+        
+    }
+    
     rowsPerPage = 5;
     NSLog(@"-----:%@",home);
     return YES;

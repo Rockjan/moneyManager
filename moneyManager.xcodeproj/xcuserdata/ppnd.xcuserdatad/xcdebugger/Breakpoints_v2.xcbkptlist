@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "moneyManager/ViewController.m"
-            timestampString = "427502945.979508"
+            timestampString = "430349400.338978"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "193"
-            endingLineNumber = "193"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
             landmarkName = "-onOk:"
             landmarkType = "5">
          </BreakpointContent>
