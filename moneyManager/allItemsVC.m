@@ -14,7 +14,9 @@
 #define pageCapacity 20
 
 @interface allItemsVC ()
-
+{
+    NSString *finalDate;
+}
 @end
 
 @implementation allItemsVC
@@ -34,6 +36,8 @@
 {
     [super viewDidLoad];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dispatchDate:) name:@"ScanByDate" object:nil];
+    
     dataSouce = [[NSMutableArray alloc] initWithCapacity:pageCapacity];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]];
@@ -51,6 +55,11 @@
         [dataSouce addObject:i];
     }
     
+}
+- (void)dispatchDate:(NSNotification *)noti {
+    
+    finalDate = [[noti object] valueForKey:@"date"];
+    NSLog(@"final date : %@",finalDate);
 }
 - (void)didReceiveMemoryWarning
 {

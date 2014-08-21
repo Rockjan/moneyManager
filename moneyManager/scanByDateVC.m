@@ -9,6 +9,9 @@
 #import "scanByDateVC.h"
 
 @interface scanByDateVC ()
+{
+    NSString *finalDate;
+}
 
 @end
 
@@ -32,17 +35,7 @@
     self.title = @"按日期浏览";
     
     NSDate *nd = [NSDate date];
-    NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
-    
-    [dateformatter setDateFormat:@"年账单浏览-YYYY年"];
-    
-    [_year setTitle:[dateformatter stringFromDate:nd] forState:UIControlStateNormal];
-    
-    [dateformatter setDateFormat:@"月账单浏览-YYYY年MM月"];
-    [_month setTitle:[dateformatter stringFromDate:nd] forState:UIControlStateNormal];
-    
-    [dateformatter setDateFormat:@"日账单浏览-YYYY年MM月dd日"];
-    [_date setTitle:[dateformatter stringFromDate:nd] forState:UIControlStateNormal];
+    [self getDate:nd];
     
     // Do any additional setup after loading the view.
 }
@@ -69,7 +62,11 @@
 }
 
 - (IBAction)searchByYear:(id)sender {
-  //  [self performSegueWithIdentifier:@"dateSearch" sender:self];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:finalDate,@"date",nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ScanByDate" object:nil userInfo:dict];
+    
+    [self performSegueWithIdentifier:@"dateSearch" sender:self];
 }
 
 - (IBAction)searchByDate:(id)sender {
@@ -81,6 +78,11 @@
     
     UIDatePicker *sc = (UIDatePicker *)sender;
     NSDate *nd = [sc date];
+    [self getDate:nd];
+    
+}
+
+- (void)getDate:(NSDate *)nd {
     
     NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
     
@@ -94,5 +96,7 @@
     [dateformatter setDateFormat:@"日账单浏览-YYYY年MM月dd日"];
     [_date setTitle:[dateformatter stringFromDate:nd] forState:UIControlStateNormal];
     
+    [dateformatter setDateFormat:@"YYYY-MM-dd"];
+    finalDate = [dateformatter stringFromDate:nd];
 }
 @end

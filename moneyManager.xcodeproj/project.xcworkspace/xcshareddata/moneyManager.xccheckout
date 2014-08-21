@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>2846FE51-2497-4B5F-9719-BCE1C896F05A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>moneyManager</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F63CFB6D-1CA7-4C5F-9888-054EECE3EF95</key>
+		<string>https://github.com/Rockjan/moneyManager.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>moneyManager.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F63CFB6D-1CA7-4C5F-9888-054EECE3EF95</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/Rockjan/moneyManager.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F63CFB6D-1CA7-4C5F-9888-054EECE3EF95</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F63CFB6D-1CA7-4C5F-9888-054EECE3EF95</string>
+			<key>IDESourceControlWCCName</key>
+			<string>moneyManager</string>
+		</dict>
+	</array>
+</dict>
+</plist>

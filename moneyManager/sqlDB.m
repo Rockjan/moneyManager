@@ -162,34 +162,21 @@
         for (int i = 1 ; i <=9 ;i++) {
             
             NSString *tempDate = [NSString stringWithFormat:@"%@-%@-0%d",dateArray[0],dateArray[1],i];
-            NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByDate:tempDate withFlag:2]];
-            
+           
             float tp = 0.0f;
             
-            if (stmt.count > 0) {
-                
-                for (DBitem *tItem in stmt) {
-                    tp += tItem.price*tItem.counts;
-                }
-                
-            }
-            
+            tp = [self searchByDate:tempDate withFlag:2];
+        
             [temp addObject:[NSString stringWithFormat:@"%.2f",tp]];
             
         }
         for (int i = 10 ; i <=31 ;i++) {
             
             NSString *tempDate = [NSString stringWithFormat:@"%@-%@-%d",dateArray[0],dateArray[1],i];
-            NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByDate:tempDate withFlag:2]];
             
             float tp = 0.0f;
             
-            if (stmt.count > 0) {
-                
-                for (DBitem *tItem in stmt) {
-                    tp += tItem.price*tItem.counts;
-                }
-            }
+            tp = [self searchByDate:tempDate withFlag:2];
             
             [temp addObject:[NSString stringWithFormat:@"%.2f",tp]];
         }
@@ -203,33 +190,18 @@
     for (int i = 1 ; i <=9 ;i++) {
         
         NSString *tempDate = [NSString stringWithFormat:@"%@-0%d-00",dateArray[0],i];
-        NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByDate:tempDate withFlag:1]];
-        
         float tp = 0.0f;
         
-        if (stmt.count > 0) {
-            
-            for (DBitem *tItem in stmt) {
-                tp += tItem.price*tItem.counts;
-            }
-
-        }
+        tp = [self searchByDate:tempDate withFlag:1];
         
         [temp addObject:[NSString stringWithFormat:@"%.2f",tp]];
     }
     for (int i = 10 ; i <=12 ;i++) {
         
         NSString *tempDate = [NSString stringWithFormat:@"%@-%d-00",dateArray[0],i];
-        NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByDate:tempDate withFlag:1]];
-        
         float tp = 0.0f;
         
-        if (stmt.count > 0) {
-            
-            for (DBitem *tItem in stmt) {
-                tp += tItem.price*tItem.counts;
-            }
-        }
+        tp = [self searchByDate:tempDate withFlag:1];
         
         [temp addObject:[NSString stringWithFormat:@"%.2f",tp]];
     }
@@ -250,37 +222,14 @@
         
         //数据一定要有31个，不足的（比如2月份只有28天）用0 补齐
 
-        for (int t = 0; t < 8; t++) {
+       for (int t = 0; t < 8; t++) {
             
             float tp = 0.0f;
-            
-            for (int i = 1 ; i <=9 ;i++) {
-                
-                NSString *tempDate = [NSString stringWithFormat:@"%@-%@-0%d",dateArray[0],dateArray[1],i];
-                NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByCata:t withDate:tempDate andFlag:2]];
+           
+            NSString *tempDate = [NSString stringWithFormat:@"%@-%@-00",dateArray[0],dateArray[1]];
+            tp = [self searchByCata:t withDate:tempDate andFlag:1];
 
-                if (stmt.count > 0) {
-                    
-                    for (DBitem *tItem in stmt) {
-                        tp += tItem.price*tItem.counts;
-                    }
-                    
-                }
-                
-            }
-            for (int i = 10 ; i <=31 ;i++) {
-                
-                NSString *tempDate = [NSString stringWithFormat:@"%@-%@-%d",dateArray[0],dateArray[1],i];
-                NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByCata:t withDate:tempDate andFlag:2]];
-                
-                if (stmt.count > 0) {
-                    
-                    for (DBitem *tItem in stmt) {
-                        tp += tItem.price*tItem.counts;
-                    }
-                }
-            }
-            
+
             productItem *proItem = [[productItem alloc] init];
             proItem.price = tp;
             proItem.name = [dict valueForKey:[NSString stringWithFormat:@"%d",t]];
@@ -288,7 +237,6 @@
             [temp addObject:proItem];            
         }
 
-        
         return temp;
     }
     
@@ -297,32 +245,10 @@
           
           float tp = 0.0f;
           
-          for (int i = 1 ; i <=9 ;i++) {
-              
-              NSString *tempDate = [NSString stringWithFormat:@"%@-0%d-00",dateArray[0],i];
-              NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByCata:t withDate:tempDate andFlag:1]];
-              
-              if (stmt.count > 0) {
-                  
-                  for (DBitem *tItem in stmt) {
-                      tp += tItem.price*tItem.counts;
-                  }
-                  
-              }
-          }
-          for (int i = 10 ; i <=12 ;i++) {
-              
-              NSString *tempDate = [NSString stringWithFormat:@"%@-%d-00",dateArray[0],i];
-              NSArray *stmt = [[NSArray alloc] initWithArray:[self searchByCata:t withDate:tempDate andFlag:1]];
-              
-              if (stmt.count > 0) {
-                  
-                  for (DBitem *tItem in stmt) {
-                      tp += tItem.price*tItem.counts;
-                  }
-              }
-          }
-
+          NSString *tempDate = [NSString stringWithFormat:@"%@-%@-00",dateArray[0],dateArray[1]];
+          tp = [self searchByCata:t withDate:tempDate andFlag:0];
+          
+          
           productItem *proItem = [[productItem alloc] init];
           proItem.price = tp;
           proItem.name = [dict valueForKey:[NSString stringWithFormat:@"%d",t]];
@@ -332,68 +258,47 @@
    
     return temp;
 }
-- (NSArray *)searchByDate:(NSString *)date withFlag:(int)flag {
+- (float)searchByDate:(NSString *)date withFlag:(int)flag {
     
     NSArray *dateArray = [[NSArray alloc] initWithArray:[date componentsSeparatedByString:@"-"]];
     
     if(flag == 2){//按日查询
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' and month='%@' and day='%@'"
-                         ,tableName
+        NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@' AND day='%@'"
                          ,dateArray[0]
                          ,dateArray[1]
                          ,dateArray[2]];
         
-        return [self fetchExec:sql];
-    }else if(flag == 1){//按月份查询
+        return [self fetchExecSum:sql];
+    }
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' and month='%@'"
-                         ,tableName
+    NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@'"
                          ,dateArray[0]
                          ,dateArray[1]];
         
-        return [self fetchExec:sql];
-    }
-    //按年份
-    
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@'"
-                     ,tableName
-                     ,dateArray[0]];
-    
-    return [self fetchExec:sql];
+    return [self fetchExecSum:sql];
 }
-- (NSArray *)searchByCata:(int)cata withDate:(NSString *)date andFlag:(int)flag {
+- (float)searchByCata:(int)cata withDate:(NSString *)date andFlag:(int)flag {
     
     NSArray *dateArray = [[NSArray alloc] initWithArray:[date componentsSeparatedByString:@"-"]];
     
-    if(flag == 2){//按日查询
+    if(flag == 1){//按月份查询
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' and month='%@' and day='%@' and type=%d"
-                         ,tableName
-                         ,dateArray[0]
-                         ,dateArray[1]
-                         ,dateArray[2]
-                         ,cata];
-        
-        return [self fetchExec:sql];
-    }else if(flag == 1){//按月份查询
-        
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' and month='%@' and type=%d"
-                         ,tableName
+        NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@' and type=%d"
                          ,dateArray[0]
                          ,dateArray[1]
                          ,cata];
 
         
-        return [self fetchExec:sql];
+        return [self fetchExecSum:sql];
     }
     //按年份
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@'"
-                     ,tableName
-                     ,dateArray[0]];
+    NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable WHERE year='%@' AND type=%d"
+                     ,dateArray[0]
+                     ,cata];
     
-    return [self fetchExec:sql];
+    return [self fetchExecSum:sql];
 }
 #pragma mark - Execute SQL
 - (NSArray *) fetchExec:(NSString *)sql {
@@ -440,5 +345,23 @@
     return array;
 }
 
+- (float) fetchExecSum:(NSString *)sql {
+    
+    float value = 0.0f;
+    
+    sqlite3_stmt *stmt;
+    
+    if (sqlite3_prepare_v2(dateBase,[sql UTF8String], -1, &stmt, nil) == SQLITE_OK) {
+        
+        if (sqlite3_step(stmt) == SQLITE_ROW) {
+            value = (float)sqlite3_column_double(stmt, 0);
+        }
+        
+    }
+    
+    // NSLog(@"从%d开始，读取了%d行数据",rowsPerPage*page,rowsPerPage);
+    
+    return value;
+}
 
 @end

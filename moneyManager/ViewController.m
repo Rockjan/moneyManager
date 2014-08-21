@@ -120,7 +120,7 @@
 }
 - (BOOL) isNum:(NSString *)str {
     
-    if ([[str stringByTrimmingCharactersInSet: [NSCharacterSet decimalDigitCharacterSet]]stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]].length >0) {
+    if ([[str stringByTrimmingCharactersInSet: [NSCharacterSet decimalDigitCharacterSet]]stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]].length >1) {
         return YES;
     }else{
         return NO;
@@ -146,7 +146,7 @@
     NSString *at = @"好了!";
     BOOL flag = NO;
     
-    if ([_proName.text isEqualToString:@""]) {
+    if ([_nameTxt.text isEqualToString:@""]) {
         msg = @"请输入正确的物品名称！";
         at = @"出错了！";
         flag = YES;
@@ -154,7 +154,7 @@
         msg = @"请输入正确的价格！（最好是数字~）";
         at = @"出错了！";
         flag = YES;
-    }else if ([_amount.text isEqualToString:@""] || [self isNum:_amount.text]){
+    }else if ([_amountTxt.text isEqualToString:@""] || [self isNum:_amount.text]){
         msg = @"请输入正确的数量！（最好是数字~）";
         at = @"出错了！";
         flag = YES;
@@ -218,7 +218,7 @@
         break;
     
     // 将获得到条形码显示到我们的界面上
-    //_resultText.text = symbol.data;
+    _price.text = symbol.data;
     
     // 扫描时的图片显示到我们的界面上
     //_resultImage.image =
@@ -228,6 +228,47 @@
     [reader dismissModalViewControllerAnimated: YES];
 }
 
+- (void)getJson:(NSString *)str {
+    
+   // NSString *str = @"https://api.douban.com/v2/book/isbn/9787544253994";
+    
+    NSURL *url = [NSURL URLWithString:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL:url];
+    [request setHTTPMethod:@"GET"];
+    [request setTimeoutInterval:60];
+    
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse* response, NSData* data, NSError* error){
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+            if (json != nil) {
+                if ([json isKindOfClass:[NSDictionary class]]) {
+                    // NSLog(@"json is %@\n", [json objectForKey:@"title"]);
+                    
+                    _nameTxt.text = [json objectForKey:@"title"];
+                    _amountTxt.text = @"1";
+                    NSString *price = [json objectForKey:@"price"];
+                    
+                    _priceTxt.text = [[price substringToIndex:price.length-2] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    NSLog(@"%@",_priceTxt.text);
+                    
+                    _typeImg.image = [UIImage imageNamed:@"tarBook@2x"];
+                    typeFlag = YES;
+                    types = 1;
+                }
+            }
+        });
+        
+    }];
+    
+
+}
 - (IBAction)onClickTXM:(id)sender {
     ZBarReaderViewController *reader = [ZBarReaderViewController new];
     reader.readerDelegate = self;
@@ -237,6 +278,7 @@
                    config: ZBAR_CFG_ENABLE
                        to: 0];
     
+    [self getJson:@"https://api.douban.com/v2/book/isbn/9787544253994"];
     [self presentModalViewController: reader animated: YES];
 }
 
