@@ -9,14 +9,17 @@
 #import "allItemsVC.h"
 #import "sqlDB.h"
 #import "DBitem.h"
+#import "itemEdit.h"
 
 #define cellHeight 60
 #define pageCapacity 20
 
 @interface allItemsVC ()
 {
-    NSString *finalDate;
+    sqlDB *myDB;
+    NSString *title;
 }
+
 @end
 
 @implementation allItemsVC
@@ -25,9 +28,8 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
+        _scanType = 0;
         page = 0;
-       
     }
     return self;
 }
@@ -36,31 +38,50 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dispatchDate:) name:@"ScanByDate" object:nil];
-    
     dataSouce = [[NSMutableArray alloc] initWithCapacity:pageCapacity];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]];
-    [self initDB];
+    
+    myDB = [sqlDB sharedInstance];
+    
+    [self getData];
+    
+    self.title = title;
     
 }
-- (void)initDB {
 
-    sqlDB *myDB = [sqlDB sharedInstance];
-    [myDB openDB];
+- (void)getData {
     
-    NSArray *array = [myDB fetchAllWithPage:page];
+    NSArray *array;
+    switch (_scanType) {
+        case 1:
+            array = [[NSArray alloc] initWithArray:[myDB searchByDate:_finalDate WithPage:page++ withFlag:0]];
+            title = _finalDate;
+            break;
+        case 2:
+            array = [[NSArray alloc] initWithArray:[myDB searchByDate:_finalDate WithPage:page++ withFlag:1]];
+            title = _finalDate;
+            break;
+        case 3:
+            array = [[NSArray alloc] initWithArray:[myDB searchByDate:_finalDate WithPage:page++ withFlag:2]];
+            title = _finalDate;
+            break;
+        case 4:
+            array = [[NSArray alloc] initWithArray:[myDB searchByCata:_cate WithPage:page++]];
+            title = _cateName;
+            break;
+        default:
+            array = [[NSArray alloc] initWithArray:[myDB fetchAllWithPage:page++]];
+            title = @"全部物品列表";
+            break;
+    }
 
     for (DBitem *i in array) {
         [dataSouce addObject:i];
     }
     
 }
-- (void)dispatchDate:(NSNotification *)noti {
-    
-    finalDate = [[noti object] valueForKey:@"date"];
-    NSLog(@"final date : %@",finalDate);
-}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -97,21 +118,16 @@
     
     DBitem *item = (DBitem *)dataSouce[indexPath.row];
     
-    UILabel *ln = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 80, 40)];
+    UILabel *ln = [[UILabel alloc] initWithFrame:CGRectMake(30, 0, 100, 40)];
     ln.text =[NSString stringWithFormat:@"%@ ",item.name];
     ln.textColor = [UIColor blueColor];
     ln.font = [UIFont systemFontOfSize:15.0f];
     
-    UILabel *lpc = [[UILabel alloc] initWithFrame:CGRectMake(100, 0, 70, 40)];
+    UILabel *lpc = [[UILabel alloc] initWithFrame:CGRectMake(115, 0, 70, 40)];
     lpc.text =[NSString stringWithFormat:@"￥%.1f",item.price];
     lpc.font = [UIFont systemFontOfSize:15.0f];
     
-    UILabel *lt = [[UILabel alloc] initWithFrame:CGRectMake(175, 0, 40, 40)];
-    lt.text =[NSString stringWithFormat:@"%@ ",item.typeString];
-    lt.textColor = [UIColor blueColor];
-    lt.font = [UIFont systemFontOfSize:15.0f];
-    
-    UILabel *ld = [[UILabel alloc] initWithFrame:CGRectMake(215, 0, 100, 40)];
+    UILabel *ld = [[UILabel alloc] initWithFrame:CGRectMake(205, 0, 100, 40)];
     ld.text =[NSString stringWithFormat:@"%@/%@/%@",item.year,item.month,item.day];
     ld.font = [UIFont systemFontOfSize:15.0f];
     
@@ -119,7 +135,6 @@
     //cell.textLabel.text = text;
     [cell.contentView addSubview:ln];
     [cell.contentView addSubview:lpc];
-    [cell.contentView addSubview:lt];
     [cell.contentView addSubview:ld];
     
     UIView *backView = [[UIView alloc] initWithFrame:cell.frame];
@@ -146,8 +161,16 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
-         _counts--;
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        DBitem *item = dataSouce[indexPath.row];
+        BOOL suc = [myDB deleteItem:item.ID];
+        if (suc) {
+            
+            [dataSouce removeObjectAtIndex:indexPath.row];
+            
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }
+      
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
@@ -155,10 +178,6 @@
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
     if (scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height))) {
-        
-        NSLog(@"End Dragging!!!!");
-        
-
         
         UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
         
@@ -201,8 +220,7 @@
 }
 - (void)closeFooter {
     
-    page ++;
-    [self initDB];
+    [self getData];
     [self.tableView reloadData];
     
     [UIView beginAnimations:@"ani" context:nil];
@@ -229,7 +247,7 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -237,8 +255,12 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    int index = [[self.tableView indexPathForSelectedRow] row];
+    itemEdit *iEdit = segue.destinationViewController;
+    iEdit.item = dataSouce[index];
+    
 }
-*/
+
 
 - (IBAction)goBack:(id)sender {
     

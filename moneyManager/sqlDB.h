@@ -23,14 +23,17 @@
 
 - (BOOL)openDB;
 - (BOOL)closeDB;
+
 - (void)createDBWithString:(NSString *)str;
 
 - (BOOL)insertARow:(DBitem *)item;
+- (BOOL)deleteItem:(int)tid;
+- (BOOL)updateItem:(DBitem *)item;
 
 - (NSArray *)searchByDate:(NSString *)date WithPage:(int)page withFlag:(int)flag;
 - (NSArray *)searchByCata:(int)cata WithPage:(int)page;
 
-- (DBitem *)accurateSearch:(NSString *)name withDate:(NSDate *)date;
+- (DBitem *)accurateSearch:(NSString *)name withDate:(NSString *)date;
 - (NSArray *)fetchAllWithPage:(int)page;
 
 - (NSArray *)getChartDataByDate:(NSString *)date withFlag:(int)flag;

@@ -15,5 +15,13 @@
 @property (weak, nonatomic) IBOutlet UIButton *byWangG;
 @property (weak, nonatomic) IBOutlet UIButton *byFuZ;
 @property (weak, nonatomic) IBOutlet UIButton *byJiaoT;
+- (IBAction)searchByfood:(id)sender;
+- (IBAction)searchByBook:(id)sender;
+- (IBAction)searchByFangZu:(id)sender;
+- (IBAction)searchByFuZhuang:(id)sender;
+- (IBAction)searchByJiaoTong:(id)sender;
+- (IBAction)searchByHuaFei:(id)sender;
+- (IBAction)searchByWangGou:(id)sender;
+- (IBAction)searchByOther:(id)sender;
 
 @end

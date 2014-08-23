@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import<SystemConfiguration/SystemConfiguration.h>
+#import<netdb.h>
 #import "sqlDB.h"
 #import "DBitem.h"
 
@@ -19,7 +21,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self initDB];
+    
+    [self subViewLayout];
+    
+    //设置代理，防止textfield被键盘遮挡
+    _proName.delegate = self;
+    _price.delegate = self;
+    _amount.delegate = self;
+    
+    [_proName addTarget:self action:@selector(onEditingName) forControlEvents:UIControlEventEditingChanged];
+    [_price addTarget:self action:@selector(onEditingPrice) forControlEvents:UIControlEventEditingChanged];
+    [_amount addTarget:self action:@selector(onEditingAmount) forControlEvents:UIControlEventEditingChanged];
+}
+- (void)subViewLayout {
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]];
     _contentView.backgroundColor = [UIColor clearColor];
@@ -41,22 +55,6 @@
     _billView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bill"]];
     _tuDing.backgroundColor = [UIColor clearColor];
     
-    //设置代理，防止textfield被键盘遮挡
-    _proName.delegate = self;
-    _price.delegate = self;
-    _amount.delegate = self;
-    
-    [_proName addTarget:self action:@selector(onEditingName) forControlEvents:UIControlEventEditingChanged];
-    [_price addTarget:self action:@selector(onEditingPrice) forControlEvents:UIControlEventEditingChanged];
-    [_amount addTarget:self action:@selector(onEditingAmount) forControlEvents:UIControlEventEditingChanged];
-}
-- (void)initDB {
-    
-    NSString *sql = @"CREATE TABLE IF NOT EXISTS detailTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, counts INTEGER, type INTEGER, year TEXT, month TEXT, day TEXT)";
-
-    sqlDB *myDB = [sqlDB sharedInstance];
-    [myDB openDB];
-    [myDB createDBWithString:sql];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -121,11 +119,15 @@
 }
 - (BOOL) isNum:(NSString *)str {
     
-    if ([[str stringByTrimmingCharactersInSet: [NSCharacterSet decimalDigitCharacterSet]]stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]].length >1) {
+    NSString *result =[[str stringByTrimmingCharactersInSet: [NSCharacterSet decimalDigitCharacterSet]]stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+    
+    if (result.length == 0) {
         return YES;
-    }else{
-        return NO;
+    }else if(result.length == 1) {
+        NSRange range = [result rangeOfString:@"."];
+        return (range.length > 0 ? YES : NO);
     }
+    
     return NO;
 }
 
@@ -145,28 +147,33 @@
     
     NSString *msg = @"账单新建成功！";
     NSString *at = @"好了!";
-    BOOL flag = NO;
+    BOOL isWrong = NO;
+    //[_nameTxt.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]]
     
-    if ([_nameTxt.text isEqualToString:@""]) {
+    NSString *tn = [_nameTxt.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+    NSString *tp = [_priceTxt.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+    NSString *ta = [_amountTxt.text stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
+    if ([tn isEqualToString:@""]) {
         msg = @"请输入正确的物品名称！";
         at = @"出错了！";
-        flag = YES;
-    }else if ([_priceTxt.text isEqualToString:@""] || [self isNum:_priceTxt.text]){
+        isWrong = YES;
+    }else if ([tp isEqualToString:@""] || ![self isNum:tp]){
         msg = @"请输入正确的价格！（最好是数字~）";
         at = @"出错了！";
-        flag = YES;
-    }else if ([_amountTxt.text isEqualToString:@""] || [self isNum:_amount.text]){
+        isWrong = YES;
+    }else if ([ta isEqualToString:@""] || ![self isNum:ta]){
         msg = @"请输入正确的数量！（最好是数字~）";
         at = @"出错了！";
-        flag = YES;
+        isWrong = YES;
     }else if (!typeFlag){
         msg = @"请选择物品类别！";
         at = @"出错了！";
-        flag = YES;
-    }
+        isWrong = YES;
+    }else
+        isWrong = NO;
 
     
-    if (!flag) {
+    if (!isWrong) {
         DBitem *item = [[DBitem alloc] init];
         NSDate *nd = [NSDate date];
         
@@ -175,9 +182,9 @@
         
         NSArray *array =[[dateformatter stringFromDate:nd] componentsSeparatedByString:@"-"];
         
-        item.name = _nameTxt.text;
-        item.price = [_priceTxt.text floatValue];
-        item.counts = [_amountTxt.text intValue];
+        item.name = tn;
+        item.price = [tp floatValue];
+        item.counts = [ta intValue];
         item.type = types;
         item.year = array[0];
         item.month = array[1];
@@ -238,7 +245,7 @@
     
     [request setURL:url];
     [request setHTTPMethod:@"GET"];
-    [request setTimeoutInterval:60];
+    [request setTimeoutInterval:15];
     
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     
@@ -249,19 +256,29 @@
             id json = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
             if (json != nil) {
                 if ([json isKindOfClass:[NSDictionary class]]) {
-                    // NSLog(@"json is %@\n", [json objectForKey:@"title"]);
                     
                     _nameTxt.text = [json objectForKey:@"title"];
-                    _amountTxt.text = @"1";
-                    NSString *price = [json objectForKey:@"price"];
                     
+                    _amountTxt.text = @"1";
+                    
+                    NSString *price = [json objectForKey:@"price"];
                     _priceTxt.text = [[price substringToIndex:price.length-2] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                    NSLog(@"%@",_priceTxt.text);
                     
                     _typeImg.image = [UIImage imageNamed:@"tarBook@2x"];
                     typeFlag = YES;
                     types = 1;
                 }
+            }else{
+                
+                NSString *msg = @"还是手动输入这本书吧！";
+                NSString *at = @"没找到啊!";
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:at
+                                                                message:msg
+                                                               delegate:self
+                                                      cancelButtonTitle:@"取消"
+                                                      otherButtonTitles:@"知道了", nil];
+                [alert show];
             }
         });
         
@@ -270,15 +287,29 @@
 
 }
 - (IBAction)onClickTXM:(id)sender {
-    ZBarReaderViewController *reader = [ZBarReaderViewController new];
-    reader.readerDelegate = self;
-    ZBarImageScanner *scanner = reader.scanner;
-    
-    [scanner setSymbology: ZBAR_I25
-                   config: ZBAR_CFG_ENABLE
-                       to: 0];
-    
-    [self presentModalViewController: reader animated: YES];
+
+    if ([self isConnectedToNetWork]) {
+        ZBarReaderViewController *reader = [ZBarReaderViewController new];
+        reader.readerDelegate = self;
+        ZBarImageScanner *scanner = reader.scanner;
+        
+        [scanner setSymbology: ZBAR_I25
+                       config: ZBAR_CFG_ENABLE
+                           to: 0];
+        
+        [self presentModalViewController: reader animated: YES];
+    }
+    else {
+        NSString *msg = @"请确保网络通畅！";
+        NSString *at = @"失败!";
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:at
+                                                        message:msg
+                                                       delegate:self
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"知道了", nil];
+        [alert show];
+    }
 }
 
 - (IBAction)onCanYin:(id)sender {
@@ -327,4 +358,52 @@
     typeFlag = YES;
     types = 7;
 }
+- (BOOL) isConnectedToNetWork
+{
+    //创建零地址，0.0.0.0的地址表示查询本机的网络连接状态
+    struct sockaddr_in zeroAddress;
+    bzero(&zeroAddress, sizeof(zeroAddress));
+    zeroAddress.sin_len = sizeof(zeroAddress);
+    zeroAddress.sin_family = AF_INET;
+    
+    /**
+     * SCNetworkReachabilityRef: 用来保存创建测试连接返回的引用
+     *
+     * SCNetworkReachabilityCreateWithAddress: 根据传入的地址测试连接.
+     * 第一个参数可以为NULL或kCFAllocatorDefault
+     * 第二个参数为需要测试连接的IP地址，当为0.0.0.0时则可以查询本机的网络连接状态
+     * 同时返回一个引用必须在用完后释放
+     * PS: SCNetworkReachabilityCreateWithName: 这是个根据传入的网络测试连接，
+     * 第二个参数比如为“www.apple.com”，其他和上一个一样
+     *
+     * SCNetworkReachabilityGetFlags：这个函数用来获得测试连接的状态，
+     * 第一个参数为之前建立的测试连接的引用，
+     * 第二个参数用来保存获得的状态，
+     * 如果能获得状态则返回TRUE，否则返回FALSE。
+     *
+     */
+    
+    SCNetworkReachabilityRef defaultRouteReachability = SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
+    SCNetworkReachabilityFlags flags;
+    
+    BOOL didRetrieveFlags = SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
+    CFRelease(defaultRouteReachability);
+    
+    if (!didRetrieveFlags) {
+        printf("Error. Could not recover network reachability flags");
+        return NO;
+    }
+    
+    /**
+     *  kSCNetworkReachabilityFlagsReachable: 能够连接网络
+     *  kSCNetworkReachabilityFlagsConnectionRequired: 能够连接网络，但是首先得建立连接过程
+     *  kSCNetworkReachabilityFlagsIsWWAN: 判断是否通过蜂窝网覆盖的连接，
+     *  比如EDGE，GPRS或者目前的3G.主要是区别通过WiFi的连接
+     */
+    BOOL isReachable = ((flags & kSCNetworkReachabilityFlagsReachable) != 0);
+    BOOL needsConnection = ((flags & kSCNetworkReachabilityFlagsConnectionRequired) != 0);
+    
+    return (isReachable && !needsConnection) ? YES : NO;
+}
+
 @end

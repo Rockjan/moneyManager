@@ -29,12 +29,18 @@
     
     return shareInstance;
 }
+
+/////////////////////////////////////////////////////////////
+//
+//数据库打开、关闭
+//
+/////////////////////////////////////////////////////////////
 - (BOOL)openDB {
     
     NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documents = [path objectAtIndex:0];
     NSString *db_path = [documents stringByAppendingPathComponent:DBName];
-    NSString *home = NSHomeDirectory();
+   // NSString *home = NSHomeDirectory();
     
     //不存在，则新建数据库
     if (sqlite3_open([db_path UTF8String], &dateBase) != SQLITE_OK) {
@@ -44,51 +50,67 @@
         
     }
     
-    NSString *sql = @"CREATE TABLE IF NOT EXISTS personInfo (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)";
-    char *error;
-    if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
-        NSLog(@"新建type-table失败！");
-    }
+    //只创建一次typeTable
+    [self typeTable];
     
-    NSString *sqlt = @"CREATE TABLE IF NOT EXISTS typeTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, tid INTEGER)";
+    rowsPerPage = 15;
     
-    [self createDBWithString:sqlt];
-    
-    NSDictionary *dict = @{@"0":@"餐饮",@"1":@"书籍",@"2":@"房租",@"3":@"话费",@"4":@"网购",@"5":@"服饰",@"6":@"交通",@"7":@"其他"};
-
-    for (NSString *key in dict) {
-        sql = [NSString stringWithFormat:@"INSERT INTO typeTable (type,tid) VALUES('%@',%d)"
-               ,[dict valueForKey:key]
-               ,[key intValue]];
-        
-        char *error;
-        
-        if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
-            NSLog(@"数据库插入失败！");
-            return NO;
-        }
-        
-    }
-    
-    rowsPerPage = 5;
-    NSLog(@"-----:%@",home);
     return YES;
 }
 - (BOOL)closeDB {
-    
+    sqlite3_close(dateBase);
     return YES;
+}
+/////////////////////////////////////////////////////////////
+//
+//新建table函数
+//
+/////////////////////////////////////////////////////////////
+- (void)typeTable {
+    
+    NSString *sqlt = @"CREATE TABLE IF NOT EXISTS typeTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, tid INTEGER)";
+    [self createDBWithString:sqlt];
+    
+    NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
+
+    BOOL isExist = [userDefault boolForKey:@"typeTable"];
+    
+    if (!isExist) {
+        
+        NSDictionary *dict = @{@"0":@"餐饮",@"1":@"书籍",@"2":@"房租",@"3":@"话费",@"4":@"网购",@"5":@"服饰",@"6":@"交通",@"7":@"其他"};
+        
+        for (NSString *key in dict) {
+            NSString *sqlt = [NSString stringWithFormat:@"INSERT INTO typeTable (type,tid) VALUES('%@',%d)"
+                              ,[dict valueForKey:key]
+                              ,[key intValue]];
+            
+            char *error;
+            
+            if (sqlite3_exec(dateBase, [sqlt UTF8String], NULL,NULL, &error) != SQLITE_OK) {
+                NSLog(@"数据库插入失败！");
+            }
+            sleep(1);
+        }
+        
+        [userDefault setBool:YES forKey:@"typeTable"];
+    }
+
+
 }
 - (void)createDBWithString:(NSString *)str {
     
-    //NSString *sql = @"CREATE TABLE IF NOT EXISTS personInfo (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)";
     char *error;
     if (sqlite3_exec(dateBase, [str UTF8String], NULL,NULL, &error) != SQLITE_OK) {
         NSLog(@"新建table失败！");
     }
-     NSLog(@"新建table成功！");
+    sleep(1);
     
 }
-
+/////////////////////////////////////////////////////////////
+//
+//增、删、改函数
+//
+/////////////////////////////////////////////////////////////
 - (BOOL)insertARow:(DBitem *)item {
     
     NSString *sql = [NSString stringWithFormat:@"INSERT INTO %@ (name,price,counts,type,year,month,day) VALUES('%@',%.2f,%d,%d,'%@','%@','%@')"
@@ -107,20 +129,61 @@
         NSLog(@"数据库插入失败！");
         return NO;
     }
+    sleep(1);
     return YES;
 }
-
+- (BOOL)deleteItem:(int)tid {
+    
+    NSString *sql = [NSString stringWithFormat:@"DELETE FROM %@ WHERE ID=%d"
+                     ,tableName
+                     ,tid];
+    
+    char *error;
+    
+    if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
+        NSLog(@"删除item失败！");
+        return NO;
+    }
+    sleep(0.5);
+    return YES;
+}
+- (BOOL)updateItem:(DBitem *)item {
+    
+    NSString *sql = [NSString stringWithFormat:@"UPDATE %@ SET  name='%@' , price=%.2f , counts=%d , type=%d , year='%@' , month='%@' , day='%@' WHERE ID=%d"
+                     ,tableName
+                     ,item.name
+                     ,item.price
+                     ,item.counts
+                     ,item.type
+                     ,item.year
+                     ,item.month
+                     ,item.day
+                     ,item.ID];
+    
+    char *error;
+    
+    if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
+        NSLog(@"数据库更新失败！");
+        return NO;
+    }
+    sleep(1);
+    return YES;
+}
 #pragma mark - search by date with page
-
+/////////////////////////////////////////////////////////////
+//
+//条件查询函数
+//
 //输入日期格式：yyyy-mm-dd
+//
+/////////////////////////////////////////////////////////////
 - (NSArray *)searchByDate:(NSString *)date WithPage:(int)page withFlag:(int)flag {
     
     NSArray *dateArray = [[NSArray alloc] initWithArray:[date componentsSeparatedByString:@"-"]];
     
     if(flag == 2){//按日查询
 
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' and month='%@' and day='%@' LIMIT %d OFFSET %d"
-                         ,tableName
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeTable on detailTable.type = typeTable.tid WHERE year='%@' and month='%@' and day='%@' LIMIT %d OFFSET %d"
                          ,dateArray[0]
                          ,dateArray[1]
                          ,dateArray[2]
@@ -130,8 +193,7 @@
         return [self fetchExec:sql];
     }else if(flag == 1){//按月份查询
 
-        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' and month='%@' LIMIT %d OFFSET %d"
-                         ,tableName
+        NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeTable on detailTable.type = typeTable.tid WHERE year='%@' and month='%@' LIMIT %d OFFSET %d"
                          ,dateArray[0]
                          ,dateArray[1]
                          ,rowsPerPage
@@ -141,8 +203,7 @@
     }
     //按年份
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE year='%@' LIMIT %d OFFSET %d"
-                     ,tableName
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeTable on detailTable.type = typeTable.tid WHERE year='%@' LIMIT %d OFFSET %d"
                      ,dateArray[0]
                      ,rowsPerPage
                      ,page*rowsPerPage];
@@ -152,8 +213,7 @@
 
 - (NSArray *)searchByCata:(int)cata WithPage:(int)page {
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM %@ WHERE type=%d LIMIT %d OFFSET %d"
-                     ,tableName
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeTable on detailTable.type = typeTable.tid WHERE detailTable.type=%d LIMIT %d OFFSET %d"
                      ,cata
                      ,rowsPerPage
                      ,page*rowsPerPage];
@@ -163,19 +223,50 @@
 }
 
 #pragma mark - accurate search
-- (DBitem *)accurateSearch:(NSString *)name withDate:(NSDate *)date {
+/////////////////////////////////////////////////////////////
+//
+//精确查询函数
+//
+//输入日期格式：yyyy-mm-dd
+//
+/////////////////////////////////////////////////////////////
+- (DBitem *)accurateSearch:(NSString *)name withDate:(NSString *)date {
+    
+    NSArray *dateArray = [[NSArray alloc] initWithArray:[date componentsSeparatedByString:@"-"]];
+    
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeTable on detailTable.type = typeTable.tid WHERE name='%@' and year='%@' and month='%@' and day='%@'"
+                     ,name
+                     ,dateArray[0]
+                     ,dateArray[1]
+                     ,dateArray[2]];
+    
+    NSArray *result = [[NSArray alloc] initWithArray:[self fetchExec:sql]];
+    if ([result count] >= 1) {
+        return (DBitem *)result[0];
+    }
     return nil;
 }
 #pragma mark - fetch all
+/////////////////////////////////////////////////////////////
+//
+//fetchAll函数
+//
+/////////////////////////////////////////////////////////////
 - (NSArray *)fetchAllWithPage:(int)page {
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeString ON detailTable.type=typeString.type LIMIT %d OFFSET %d",rowsPerPage,page*rowsPerPage];
+    NSString *sql = [NSString stringWithFormat:@"SELECT * FROM detailTable inner join typeTable ON detailTable.type=typeTable.tid LIMIT %d OFFSET %d",rowsPerPage,page*rowsPerPage];
     
     return [self fetchExec:sql];
 }
 
 #pragma mark - draw chart Data
+/////////////////////////////////////////////////////////////
+//
+//获取绘图数据（折线、直方图）函数
+//
 //输入日期格式：yyyy-mm-dd
+//
+/////////////////////////////////////////////////////////////
 - (NSArray *)getChartDataByDate:(NSString *)date withFlag:(int)flag {
 
     
@@ -292,7 +383,7 @@
     
     if(flag == 2){//按日查询
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@' AND day='%@'"
+        NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price*counts) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@' AND day='%@'"
                          ,dateArray[0]
                          ,dateArray[1]
                          ,dateArray[2]];
@@ -300,7 +391,7 @@
         return [self fetchExecSum:sql];
     }
         
-    NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@'"
+    NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price*counts) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@'"
                          ,dateArray[0]
                          ,dateArray[1]];
         
@@ -312,7 +403,7 @@
     
     if(flag == 1){//按月份查询
         
-        NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@' and type=%d"
+        NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price*counts) AS totalValus FROM detailTable  WHERE year='%@' AND month='%@' and type=%d"
                          ,dateArray[0]
                          ,dateArray[1]
                          ,cata];
@@ -322,13 +413,18 @@
     }
     //按年份
     
-    NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price) AS totalValus FROM detailTable WHERE year='%@' AND type=%d"
+    NSString *sql = [NSString stringWithFormat:@"SELECT SUM(price*counts) AS totalValus FROM detailTable WHERE year='%@' AND type=%d"
                      ,dateArray[0]
                      ,cata];
     
     return [self fetchExecSum:sql];
 }
 #pragma mark - Execute SQL
+/////////////////////////////////////////////////////////////
+//
+//执行函数
+//
+/////////////////////////////////////////////////////////////
 - (NSArray *) fetchExec:(NSString *)sql {
     
     NSMutableArray *array = [[NSMutableArray alloc] initWithCapacity:rowsPerPage];

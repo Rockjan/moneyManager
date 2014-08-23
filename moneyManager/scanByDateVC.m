@@ -7,10 +7,12 @@
 //
 
 #import "scanByDateVC.h"
+#import "allItemsVC.h"
 
 @interface scanByDateVC ()
 {
     NSString *finalDate;
+    int scanType;
 }
 
 @end
@@ -46,33 +48,37 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    allItemsVC *destination = segue.destinationViewController;
+    destination.scanType = scanType;
+    destination.finalDate = finalDate;
 }
-*/
+
 
 - (IBAction)goBack:(id)sender {
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (IBAction)searchByYear:(id)sender {
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:finalDate,@"date",nil];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ScanByDate" object:nil userInfo:dict];
-    
+    scanType = 1;
     [self performSegueWithIdentifier:@"dateSearch" sender:self];
 }
 
 - (IBAction)searchByDate:(id)sender {
+    
+    scanType = 3;
+    [self performSegueWithIdentifier:@"dateSearch" sender:self];
 }
-
 - (IBAction)searchByMonth:(id)sender {
+    
+    scanType = 2;
+    [self performSegueWithIdentifier:@"dateSearch" sender:self];
 }
 - (IBAction)onDateChange:(id)sender {
     

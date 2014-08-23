@@ -36,6 +36,12 @@
 		5B5A8A8C1975E54F009FE113 /* qita@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5A8A8B1975E54F009FE113 /* qita@2x.png */; };
 		5B5A8A8E1975E582009FE113 /* fushi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5A8A8D1975E582009FE113 /* fushi@2x.png */; };
 		5B5A8A901975F338009FE113 /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5A8A8F1975F338009FE113 /* bg@2x.png */; };
+		5B5E861A19A90DDF001111FC /* itemEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B5E861919A90DDF001111FC /* itemEdit.m */; };
+		5B5E861C19A94D11001111FC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B5E861B19A94D11001111FC /* SystemConfiguration.framework */; };
+		5B5E861F19A953C1001111FC /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5E861D19A953C1001111FC /* Default.png */; };
+		5B5E862019A953C1001111FC /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5E861E19A953C1001111FC /* Default@2x.png */; };
+		5B5E862319A95964001111FC /* app.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5E862119A95964001111FC /* app.png */; };
+		5B5E862419A95964001111FC /* app@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5E862219A95964001111FC /* app@2x.png */; };
 		5B6BEB1819689CD1001C53A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6BEB1719689CD1001C53A8 /* Foundation.framework */; };
 		5B6BEB1A19689CD1001C53A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6BEB1919689CD1001C53A8 /* CoreGraphics.framework */; };
 		5B6BEB1C19689CD1001C53A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B6BEB1B19689CD1001C53A8 /* UIKit.framework */; };
@@ -144,6 +150,13 @@
 		5B5A8A8B1975E54F009FE113 /* qita@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qita@2x.png"; sourceTree = "<group>"; };
 		5B5A8A8D1975E582009FE113 /* fushi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fushi@2x.png"; sourceTree = "<group>"; };
 		5B5A8A8F1975F338009FE113 /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg@2x.png"; sourceTree = "<group>"; };
+		5B5E861819A90DDF001111FC /* itemEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itemEdit.h; sourceTree = "<group>"; };
+		5B5E861919A90DDF001111FC /* itemEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = itemEdit.m; sourceTree = "<group>"; };
+		5B5E861B19A94D11001111FC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		5B5E861D19A953C1001111FC /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		5B5E861E19A953C1001111FC /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		5B5E862119A95964001111FC /* app.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app.png; sourceTree = "<group>"; };
+		5B5E862219A95964001111FC /* app@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app@2x.png"; sourceTree = "<group>"; };
 		5B6BEB1419689CD1001C53A8 /* moneyManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = moneyManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B6BEB1719689CD1001C53A8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5B6BEB1919689CD1001C53A8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -207,6 +220,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B5E861C19A94D11001111FC /* SystemConfiguration.framework in Frameworks */,
 				5B56FE50197717A9006AA227 /* libsqlite3.dylib in Frameworks */,
 				5B338BF21971F6F900734706 /* libiconv.dylib in Frameworks */,
 				5B338BF01971F6BD00734706 /* QuartzCore.framework in Frameworks */,
@@ -344,6 +358,8 @@
 		5B56FE5419771844006AA227 /* scanViews */ = {
 			isa = PBXGroup;
 			children = (
+				5B5E861819A90DDF001111FC /* itemEdit.h */,
+				5B5E861919A90DDF001111FC /* itemEdit.m */,
 				5B5070EA196F3D0B001CB879 /* accurateSearchVC.h */,
 				5B5070EB196F3D0B001CB879 /* accurateSearchVC.m */,
 				5B5070E4196F355E001CB879 /* allItemsVC.h */,
@@ -407,6 +423,7 @@
 		5B6BEB1619689CD1001C53A8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5B5E861B19A94D11001111FC /* SystemConfiguration.framework */,
 				5B56FE4F197717A9006AA227 /* libsqlite3.dylib */,
 				5B338BF11971F6F900734706 /* libiconv.dylib */,
 				5B338BEF1971F6BD00734706 /* QuartzCore.framework */,
@@ -441,6 +458,10 @@
 		5B6BEB1E19689CD1001C53A8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5B5E862119A95964001111FC /* app.png */,
+				5B5E862219A95964001111FC /* app@2x.png */,
+				5B5E861D19A953C1001111FC /* Default.png */,
+				5B5E861E19A953C1001111FC /* Default@2x.png */,
 				5B338BC81971F51200734706 /* ZBarSDK */,
 				5B0EB437196CAEFC0003081F /* images */,
 				5B6BEB5B1968A717001C53A8 /* drawLine.h */,
@@ -590,12 +611,15 @@
 				5B5A8A8E1975E582009FE113 /* fushi@2x.png in Resources */,
 				5BA64AD619733F4E0042066C /* ibook@2x.png in Resources */,
 				5B338BEA1971F51200734706 /* zbar-samples.png in Resources */,
+				5B5E862319A95964001111FC /* app.png in Resources */,
 				5B0EB43B196CAF430003081F /* ding@2x.png in Resources */,
+				5B5E861F19A953C1001111FC /* Default.png in Resources */,
 				5B6BEB2219689CD1001C53A8 /* InfoPlist.strings in Resources */,
 				5B0EB439196CAF0D0003081F /* bill@2x.png in Resources */,
 				5B5A8A861975E363009FE113 /* tarGJ@2x.png in Resources */,
 				5BA64ACE19733F4E0042066C /* book@2x.png in Resources */,
 				5B5A8A881975E363009FE113 /* tarQther@2x.png in Resources */,
+				5B5E862419A95964001111FC /* app@2x.png in Resources */,
 				5BA64AE21973449B0042066C /* btnNormal.png in Resources */,
 				5BA64AD819733F4E0042066C /* ifangzu@2x.png in Resources */,
 				5B5A8A901975F338009FE113 /* bg@2x.png in Resources */,
@@ -615,6 +639,7 @@
 				5B5A8A871975E363009FE113 /* tarHF@2x.png in Resources */,
 				5B5A8A8C1975E54F009FE113 /* qita@2x.png in Resources */,
 				5BA64AD219733F4E0042066C /* gongjiao@2x.png in Resources */,
+				5B5E862019A953C1001111FC /* Default@2x.png in Resources */,
 				5B6BEB2B19689CD1001C53A8 /* Main.storyboard in Resources */,
 				5BA64ADD19733F4E0042066C /* iqita@2x.png in Resources */,
 				5BA64AD019733F4E0042066C /* food@2x.png in Resources */,
@@ -653,6 +678,7 @@
 				5B56FE581977189B006AA227 /* sqlDB.m in Sources */,
 				5B6BEB541968A3A7001C53A8 /* chartPanelVC.m in Sources */,
 				5B56FE5B19771D93006AA227 /* DBitem.m in Sources */,
+				5B5E861A19A90DDF001111FC /* itemEdit.m in Sources */,
 				5B6BEB591968A5C9001C53A8 /* drawRect.m in Sources */,
 				5B5070EC196F3D0B001CB879 /* accurateSearchVC.m in Sources */,
 				5B6BEB2819689CD1001C53A8 /* AppDelegate.m in Sources */,

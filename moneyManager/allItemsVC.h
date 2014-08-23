@@ -16,7 +16,12 @@
     int page;
 }
 
-@property int counts;
+@property (assign,nonatomic)int counts;
+@property (assign,nonatomic)int scanType;
+@property (assign,nonatomic)NSString *finalDate;
+@property (assign,nonatomic)int cate;
+@property (assign,nonatomic) NSString *cateName;
+
 - (IBAction)goBack:(id)sender;
 
 @end

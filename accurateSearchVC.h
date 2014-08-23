@@ -16,5 +16,6 @@
 
 - (IBAction)goBack:(id)sender;
 - (IBAction)onChangeDAte:(id)sender;
+- (IBAction)onSearchAccrurate:(id)sender;
 
 @end

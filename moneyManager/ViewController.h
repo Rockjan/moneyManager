@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIView *billView;
 @property (weak, nonatomic) IBOutlet UIScrollView *contentView;
 @property (weak, nonatomic) IBOutlet UIImageView *typeImg;
+
 - (IBAction)clearTF:(id)sender;
 - (IBAction)clearBill:(id)sender;
 - (IBAction)onOk:(id)sender;

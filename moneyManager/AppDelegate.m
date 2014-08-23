@@ -7,12 +7,16 @@
 //
 
 #import "AppDelegate.h"
+#import "sqlDB.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    [self initDB];
+    [NSThread sleepForTimeInterval:1.0];
     return YES;
 }
 							
@@ -40,7 +44,17 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    sqlDB *myDB = [sqlDB sharedInstance];
+    [myDB closeDB];
+
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
+- (void)initDB {
+    
+    NSString *sql = @"CREATE TABLE IF NOT EXISTS detailTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, counts INTEGER, type INTEGER, year TEXT, month TEXT, day TEXT)";
+    
+    sqlDB *myDB = [sqlDB sharedInstance];
+    [myDB openDB];
+    [myDB createDBWithString:sql];
+}
 @end

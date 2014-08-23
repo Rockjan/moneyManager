@@ -45,11 +45,8 @@
     [self initDB];
 }
 - (void)initDB {
-    NSString *sql = @"CREATE TABLE IF NOT EXISTS detailTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, counts INTEGER, type INTEGER, year TEXT, month TEXT, day TEXT)";
     
     sqlDB *myDB = [sqlDB sharedInstance];
-    [myDB openDB];
-    [myDB createDBWithString:sql];
     
     if (_dateStr.length<=0) {
         NSDate *nd = [NSDate date];
