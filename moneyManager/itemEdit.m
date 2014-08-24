@@ -139,7 +139,8 @@
             msg = @"物品信息更新失败！";
             at = @"出错！";
         }else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
+            NSDictionary *dict = @{@"newItem":newItem,@"oldItem":_item};
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self userInfo:dict];
         }
     }
     

@@ -455,10 +455,8 @@
             
             [array addObject:item];
         }
-    
-        sqlite3_finalize(stmt);
-        
     }
+    sqlite3_finalize(stmt);
     
    // NSLog(@"从%d开始，读取了%d行数据",rowsPerPage*page,rowsPerPage);
     

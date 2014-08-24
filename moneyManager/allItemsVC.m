@@ -40,7 +40,7 @@
     
     dataSouce = [[NSMutableArray alloc] initWithCapacity:pageCapacity];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"reloadData" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable:) name:@"reloadData" object:nil];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]];
     
@@ -51,8 +51,12 @@
     self.title = title;
     
 }
-- (void)reloadTable {
-    page--;
+- (void)reloadTable:(NSNotification *)noti {
+    
+    DBitem *newitem = (DBitem *)[[noti userInfo] valueForKey:@"newItem"];
+    DBitem *olditem = (DBitem *)[[noti userInfo] valueForKey:@"oldItem"];
+    [dataSouce removeObject:olditem];
+    [dataSouce addObject:newitem];
     [self getData];
     [self.tableView reloadData];
 }
@@ -84,7 +88,7 @@
     }
     
     [myDB closeDB];
-    [dataSouce removeAllObjects];
+    
     for (DBitem *i in array) {
         [dataSouce addObject:i];
     }
