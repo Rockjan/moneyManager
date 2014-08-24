@@ -40,20 +40,26 @@
     
     dataSouce = [[NSMutableArray alloc] initWithCapacity:pageCapacity];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTable) name:@"reloadData" object:nil];
+    
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]];
+    
     myDB = [[sqlDB alloc] init];
     
-    [myDB openDB];
     [self getData];
-    [myDB closeDB];
     
     self.title = title;
     
 }
-
+- (void)reloadTable {
+    page--;
+    [self getData];
+    [self.tableView reloadData];
+}
 - (void)getData {
     
     NSArray *array;
+    [myDB openDB];
     switch (_scanType) {
         case 1:
             array = [[NSArray alloc] initWithArray:[myDB searchByDate:_finalDate WithPage:page++ withFlag:0]];
@@ -76,7 +82,9 @@
             title = @"全部物品列表";
             break;
     }
-
+    
+    [myDB closeDB];
+    [dataSouce removeAllObjects];
     for (DBitem *i in array) {
         [dataSouce addObject:i];
     }

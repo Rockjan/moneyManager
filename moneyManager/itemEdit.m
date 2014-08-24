@@ -45,7 +45,6 @@
     
     self.title = @"编辑";
     
-    
     _nameText.text = _item.name;
     _priceText.text = [NSString stringWithFormat:@"%.2f",_item.price];
     _stepper.value = _item.counts;
@@ -61,6 +60,10 @@
         _contentView.contentInset = UIEdgeInsetsMake(-40, 0, 40, 0);
     }
     _contentView.contentSize = CGSizeMake(frame.size.width, frame.size.height);
+    
+    //UIStepper 固定住
+    _stepper.frame = CGRectMake(190, 200, 10, 10);
+    [_contentView addSubview:_stepper];
     
 }
 - (void)didReceiveMemoryWarning
@@ -135,6 +138,8 @@
         if (!suc) {
             msg = @"物品信息更新失败！";
             at = @"出错！";
+        }else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadData" object:self];
         }
     }
     
