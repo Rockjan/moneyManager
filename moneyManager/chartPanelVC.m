@@ -17,6 +17,7 @@
 @interface chartPanelVC ()
 {
     int cellTag;
+    sqlDB *myDB;
 }
 @end
 
@@ -41,12 +42,12 @@
     UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStyleBordered target:self action:@selector(goBack)];
     self.navigationItem.leftBarButtonItem = back;
     
+    myDB = [[sqlDB alloc] init];
+    
     self.title = [NSString stringWithFormat:@"%@消费统计",_chartType];
     [self initDB];
 }
 - (void)initDB {
-    
-    sqlDB *myDB = [sqlDB sharedInstance];
     
     if (_dateStr.length<=0) {
         NSDate *nd = [NSDate date];
@@ -55,13 +56,28 @@
         _dateStr = [formater stringFromDate:nd];
     }
     
+    
+    
     if ([_chartType isEqualToString:@"年"]) {
+        [myDB openDB];
         chartData1 = [myDB getChartDataByDate:_dateStr withFlag:0];
+        [myDB closeDB];
+        
+        [myDB openDB];
         chartData2 = [myDB getChartDataByCata:_dateStr withFlag:0];
+        [myDB closeDB];
     }else{
+        [myDB openDB];
         chartData1 = [myDB getChartDataByDate:_dateStr withFlag:1];
+        [myDB closeDB];
+        
+        [myDB openDB];
         chartData2 = [myDB getChartDataByCata:_dateStr withFlag:1];
+        [myDB closeDB];
     }
+    
+    
+    
     float total = 0.0;
     for (productItem *item in chartData2) {
         total += item.price;

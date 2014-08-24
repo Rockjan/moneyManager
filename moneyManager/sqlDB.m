@@ -14,8 +14,7 @@
 #define tableName @"detailTable"
 
 @implementation sqlDB
-
-+ (id)sharedInstance {
+/*+ (id)sharedInstance {
     
     static sqlDB* shareInstance = nil;
     
@@ -28,7 +27,7 @@
     });
     
     return shareInstance;
-}
+}*/
 
 /////////////////////////////////////////////////////////////
 //
@@ -89,7 +88,6 @@
             if (sqlite3_exec(dateBase, [sqlt UTF8String], NULL,NULL, &error) != SQLITE_OK) {
                 NSLog(@"数据库插入失败！");
             }
-            sleep(1);
         }
         
         [userDefault setBool:YES forKey:@"typeTable"];
@@ -103,7 +101,6 @@
     if (sqlite3_exec(dateBase, [str UTF8String], NULL,NULL, &error) != SQLITE_OK) {
         NSLog(@"新建table失败！");
     }
-    sleep(1);
     
 }
 /////////////////////////////////////////////////////////////
@@ -129,7 +126,6 @@
         NSLog(@"数据库插入失败！");
         return NO;
     }
-    sleep(1);
     return YES;
 }
 - (BOOL)deleteItem:(int)tid {
@@ -139,12 +135,11 @@
                      ,tid];
     
     char *error;
-    
+
     if (sqlite3_exec(dateBase, [sql UTF8String], NULL,NULL, &error) != SQLITE_OK) {
         NSLog(@"删除item失败！");
         return NO;
     }
-    sleep(0.5);
     return YES;
 }
 - (BOOL)updateItem:(DBitem *)item {
@@ -166,7 +161,6 @@
         NSLog(@"数据库更新失败！");
         return NO;
     }
-    sleep(1);
     return YES;
 }
 #pragma mark - search by date with page
@@ -461,6 +455,8 @@
             
             [array addObject:item];
         }
+    
+        sqlite3_finalize(stmt);
         
     }
     
@@ -482,7 +478,7 @@
         }
         
     }
-    
+    sqlite3_finalize(stmt);
     // NSLog(@"从%d开始，读取了%d行数据",rowsPerPage*page,rowsPerPage);
     
     return value;

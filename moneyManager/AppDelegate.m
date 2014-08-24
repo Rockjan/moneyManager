@@ -44,8 +44,6 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    sqlDB *myDB = [sqlDB sharedInstance];
-    [myDB closeDB];
 
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
@@ -53,8 +51,9 @@
     
     NSString *sql = @"CREATE TABLE IF NOT EXISTS detailTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, price FLOAT, counts INTEGER, type INTEGER, year TEXT, month TEXT, day TEXT)";
     
-    sqlDB *myDB = [sqlDB sharedInstance];
+    sqlDB *myDB = [[sqlDB alloc] init];
     [myDB openDB];
     [myDB createDBWithString:sql];
+    [myDB closeDB];
 }
 @end

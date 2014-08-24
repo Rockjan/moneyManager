@@ -126,11 +126,15 @@
         newItem.month = _item.month;
         newItem.day = _item.day;
         
-        sqlDB *myDB = [sqlDB sharedInstance];
+        sqlDB *myDB = [[sqlDB alloc] init];
+        
+        [myDB openDB];
         BOOL suc =[myDB updateItem:newItem];
-        if (suc) {
-            msg = @"物品信息更新成功！";
-            at = @"OK啦！";
+        [myDB closeDB];
+        
+        if (!suc) {
+            msg = @"物品信息更新失败！";
+            at = @"出错！";
         }
     }
     

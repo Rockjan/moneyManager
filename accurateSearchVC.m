@@ -114,9 +114,12 @@
         [alert show];
         return;
     }
+    sqlDB *myDB = [[sqlDB alloc] init];
     
-    sqlDB *myDB = [sqlDB sharedInstance];
+    [myDB openDB];
     item = [myDB accurateSearch:name withDate:finalDate];
+    [myDB closeDB];
+    
     if (item == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"没找到啊！"
                                                         message:@"请输入正确的查询物品名！"

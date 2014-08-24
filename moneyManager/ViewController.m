@@ -195,12 +195,15 @@
         _proName.text = @"";
         _tuDing.image = [UIImage imageNamed:@"ding"];
         
-       
-        sqlDB *myDB = [sqlDB sharedInstance];
+        sqlDB *myDB = [[sqlDB alloc] init];
+        
         [myDB openDB];
         BOOL isSuc = [myDB insertARow:item];
-        if (isSuc) {
-            NSLog(@"charuchenggong!");
+        [myDB closeDB];
+        
+        if (!isSuc) {
+            msg = @"插入失败！";
+            at = @"出错了！";
         }
         
     }

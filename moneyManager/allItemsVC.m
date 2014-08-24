@@ -41,10 +41,11 @@
     dataSouce = [[NSMutableArray alloc] initWithCapacity:pageCapacity];
     
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg"]];
+    myDB = [[sqlDB alloc] init];
     
-    myDB = [sqlDB sharedInstance];
-    
+    [myDB openDB];
     [self getData];
+    [myDB closeDB];
     
     self.title = title;
     
@@ -162,8 +163,12 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         
-        DBitem *item = dataSouce[indexPath.row];
+        DBitem *item = dataSouce[indexPath.row]
+        ;
+        [myDB openDB];
         BOOL suc = [myDB deleteItem:item.ID];
+        [myDB closeDB];
+        
         if (suc) {
             
             [dataSouce removeObjectAtIndex:indexPath.row];

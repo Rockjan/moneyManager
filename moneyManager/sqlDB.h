@@ -19,7 +19,7 @@
 
 @property (nonatomic,assign) int currentLocation;
 
-+ (id)sharedInstance;
+//+ (id)sharedInstance;
 
 - (BOOL)openDB;
 - (BOOL)closeDB;
