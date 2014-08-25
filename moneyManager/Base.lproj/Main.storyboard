@@ -436,7 +436,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="pit-2R-hjW">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mvf-59-aC4" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="消费统计" id="mCr-QI-MVe"/>
+                    <tabBarItem key="tabBarItem" title="消费统计" image="chart.png" id="mCr-QI-MVe"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="P9x-nZ-dva">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -455,7 +455,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="Q26-OJ-6EP">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cXp-04-D9P" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="新建账单" id="VeQ-eM-q3N"/>
+                    <tabBarItem key="tabBarItem" title="新建账单" image="newadd.png" id="VeQ-eM-q3N"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Fo4-Yv-6il">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -607,7 +607,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="CaC-RR-OMl">
-                                <rect key="frame" x="0.0" y="64" width="320" height="453"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="DYM-I1-s3W">
@@ -992,7 +992,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <scene sceneID="dac-XR-C7N">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hWB-n1-5BK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="查找" id="ycx-Rs-iNY"/>
+                    <tabBarItem key="tabBarItem" title="查找" image="search.png" id="ycx-Rs-iNY"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="BPc-U6-QjW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1011,6 +1011,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
     <resources>
         <image name="book.png" width="35" height="45"/>
         <image name="btnNormal.png" width="241" height="50"/>
+        <image name="chart.png" width="48" height="48"/>
         <image name="fangzu.png" width="35" height="45"/>
         <image name="food.png" width="35" height="45"/>
         <image name="fushi.png" width="35" height="45"/>
@@ -1024,7 +1025,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <image name="ihuafei.png" width="110" height="110"/>
         <image name="iqita.png" width="110" height="110"/>
         <image name="iwangguo.png" width="110" height="110"/>
+        <image name="newadd.png" width="48" height="48"/>
         <image name="qita.png" width="35" height="45"/>
+        <image name="search.png" width="48" height="48"/>
         <image name="tar.png" width="50" height="50"/>
         <image name="wanggou.png" width="35" height="45"/>
     </resources>
@@ -1034,7 +1037,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Bu7-xw-68z"/>
+        <segue reference="HCf-6T-ov4"/>
         <segue reference="Ww8-ak-dJo"/>
     </inferredMetricsTieBreakers>
 </document>

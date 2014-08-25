@@ -79,7 +79,11 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.tabBarController.tabBar.hidden = YES;
+}
 
 - (IBAction)goBack:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];

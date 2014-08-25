@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		5B0EB439196CAF0D0003081F /* bill@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0EB438196CAF0D0003081F /* bill@2x.png */; };
 		5B0EB43B196CAF430003081F /* ding@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B0EB43A196CAF430003081F /* ding@2x.png */; };
+		5B105A3519ABE77A00CA5B02 /* search.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B105A3419ABE77A00CA5B02 /* search.png */; };
+		5B105A3819ABE7C800CA5B02 /* chart.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B105A3619ABE7C800CA5B02 /* chart.png */; };
+		5B105A3919ABE7C800CA5B02 /* newadd.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B105A3719ABE7C800CA5B02 /* newadd.png */; };
 		5B338BE61971F51200734706 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B338BE01971F51200734706 /* libzbar.a */; };
 		5B338BE71971F51200734706 /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B338BE21971F51200734706 /* zbar-back.png */; };
 		5B338BE81971F51200734706 /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = 5B338BE31971F51200734706 /* zbar-help.html */; };
@@ -98,6 +101,9 @@
 /* Begin PBXFileReference section */
 		5B0EB438196CAF0D0003081F /* bill@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bill@2x.png"; sourceTree = "<group>"; };
 		5B0EB43A196CAF430003081F /* ding@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ding@2x.png"; sourceTree = "<group>"; };
+		5B105A3419ABE77A00CA5B02 /* search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search.png; sourceTree = "<group>"; };
+		5B105A3619ABE7C800CA5B02 /* chart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chart.png; sourceTree = "<group>"; };
+		5B105A3719ABE7C800CA5B02 /* newadd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newadd.png; sourceTree = "<group>"; };
 		5B338BCC1971F51200734706 /* Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = "<group>"; };
 		5B338BCD1971F51200734706 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Exception.h; sourceTree = "<group>"; };
 		5B338BCE1971F51200734706 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
@@ -460,7 +466,10 @@
 			children = (
 				5B5E862119A95964001111FC /* app.png */,
 				5B5E862219A95964001111FC /* app@2x.png */,
+				5B105A3619ABE7C800CA5B02 /* chart.png */,
+				5B105A3719ABE7C800CA5B02 /* newadd.png */,
 				5B5E861D19A953C1001111FC /* Default.png */,
+				5B105A3419ABE77A00CA5B02 /* search.png */,
 				5B5E861E19A953C1001111FC /* Default@2x.png */,
 				5B338BC81971F51200734706 /* ZBarSDK */,
 				5B0EB437196CAEFC0003081F /* images */,
@@ -615,6 +624,7 @@
 				5B0EB43B196CAF430003081F /* ding@2x.png in Resources */,
 				5B5E861F19A953C1001111FC /* Default.png in Resources */,
 				5B6BEB2219689CD1001C53A8 /* InfoPlist.strings in Resources */,
+				5B105A3519ABE77A00CA5B02 /* search.png in Resources */,
 				5B0EB439196CAF0D0003081F /* bill@2x.png in Resources */,
 				5B5A8A861975E363009FE113 /* tarGJ@2x.png in Resources */,
 				5BA64ACE19733F4E0042066C /* book@2x.png in Resources */,
@@ -638,11 +648,13 @@
 				5BA64AE11973449B0042066C /* btnHeight.png in Resources */,
 				5B5A8A871975E363009FE113 /* tarHF@2x.png in Resources */,
 				5B5A8A8C1975E54F009FE113 /* qita@2x.png in Resources */,
+				5B105A3819ABE7C800CA5B02 /* chart.png in Resources */,
 				5BA64AD219733F4E0042066C /* gongjiao@2x.png in Resources */,
 				5B5E862019A953C1001111FC /* Default@2x.png in Resources */,
 				5B6BEB2B19689CD1001C53A8 /* Main.storyboard in Resources */,
 				5BA64ADD19733F4E0042066C /* iqita@2x.png in Resources */,
 				5BA64AD019733F4E0042066C /* food@2x.png in Resources */,
+				5B105A3919ABE7C800CA5B02 /* newadd.png in Resources */,
 				5BA64ADC19733F4E0042066C /* ihuafei@2x.png in Resources */,
 				5B5A8A891975E363009FE113 /* tarWG@2x.png in Resources */,
 				5B5A8A841975E363009FE113 /* tarFood@2x.png in Resources */,

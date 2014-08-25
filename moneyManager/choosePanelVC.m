@@ -30,6 +30,11 @@
     self.title = @"消费统计";
 
 }
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.tabBarController.tabBar.hidden = NO;
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

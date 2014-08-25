@@ -51,6 +51,11 @@
     self.title = title;
     
 }
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.tabBarController.tabBar.hidden = YES;
+}
 - (void)reloadTable:(NSNotification *)noti {
     
     DBitem *newitem = (DBitem *)[[noti userInfo] valueForKey:@"newItem"];

@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "moneyManager/allItemsVC.m"
-            timestampString = "430602784.430057"
+            timestampString = "430695880.947137"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
             landmarkName = "-getData"
             landmarkType = "5">
          </BreakpointContent>
