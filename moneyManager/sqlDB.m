@@ -144,12 +144,11 @@
 }
 - (BOOL)updateItem:(DBitem *)item {
     
-    NSString *sql = [NSString stringWithFormat:@"UPDATE %@ SET  name='%@' , price=%.2f , counts=%d , type=%d , year='%@' , month='%@' , day='%@' WHERE ID=%d"
+    NSString *sql = [NSString stringWithFormat:@"UPDATE %@ SET  name='%@' , price=%.2f , counts=%d , year='%@' , month='%@' , day='%@' WHERE ID=%d"
                      ,tableName
                      ,item.name
                      ,item.price
                      ,item.counts
-                     ,item.type
                      ,item.year
                      ,item.month
                      ,item.day
